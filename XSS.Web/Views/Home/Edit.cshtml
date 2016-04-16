@@ -1,0 +1,62 @@
+﻿@model XSS.Web.Models.Item
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+    <div class="form-horizontal">
+        <h4>Item</h4>
+        <hr />
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Title, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Content, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Content, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button id="btnSave" value="Save" class="btn btn-default">Save</button>
+            </div>
+        </div>
+    </div>
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(function () {
+            $('#btnSave').click(function () {
+                var id = $('#Id').val();
+                var title = $('#Title').val();
+                var content = $('#Content').val();
+                var data = { 'id': id, 'title': title, 'content': content };
+                return $.ajax({
+                    url: '@Url.Action("Edit", "Home")',
+                    type: 'POST',
+                    data: JSON.stringify(data),
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    traditional: 'true',
+                    success:function() {
+                        window.location = '@Url.Action("Index", "Home")';
+                    },
+                    error:function(response) {
+                        alert(response.responseJSON.Message);
+                    }
+                });
+            });
+        });
+    </script>
+}
